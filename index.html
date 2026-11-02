@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>BrowserOS</title>
+        <link rel="icon" href="wallpaper/blackcat.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="style.css?v=1.13.0" />
+        <script src="index.js?v=1.13.0" defer></script>
+    </head>
+    <body class="is-loading" aria-busy="true">
+        <div id="tab-loading" class="tab-loading" role="status">Loading BrowserOS…</div>
+        <div class="default-wallpaper" aria-hidden="true">
+            <img
+                class="default-wallpaper-icon"
+                src="wallpaper/blackcat.ico"
+                alt=""
+                width="112"
+                height="112"
+            />
+            <div class="default-wallpaper-name">BROWSEROS</div>
+        </div>
+        <main class="desktop-apps" aria-label="Bookmark apps">
+            <!-- First-run defaults. Saved apps and bookmarks are rendered by index.js. -->
+            <a class="app" href="https://www.google.com/">
+                <span class="app-icon" aria-hidden="true">G</span>
+                <span class="app-name">Google</span>
+            </a>
+            <a class="app" href="https://www.youtube.com/">
+                <span class="app-icon" aria-hidden="true">▶</span>
+                <span class="app-name">YouTube</span>
+            </a>
+            <a class="app" href="https://github.com/">
+                <span class="app-icon" aria-hidden="true">GH</span>
+                <span class="app-name">GitHub</span>
+            </a>
+        </main>
+        <div class="homemenu" id="start-menu" aria-label="Start menu" aria-hidden="true" inert>
+            <section class="start-apps-panel" aria-label="Apps">
+                <div class="start-apps-header">
+                    <h2 class="start-heading">Apps</h2>
+                    <button id="add-app" class="add-app-button" type="button" disabled
+                        >+ Add app</button
+                    >
+                    <div class="app-view-options" role="group" aria-label="App view">
+                        <button
+                            type="button"
+                            class="app-view-button"
+                            data-app-view="grid"
+                            aria-label="Icon view"
+                            title="Icon view"
+                            aria-pressed="true"
+                            disabled
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                            >
+                                <rect width="7" height="7" x="3" y="3" rx="1" />
+                                <rect width="7" height="7" x="14" y="3" rx="1" />
+                                <rect width="7" height="7" x="14" y="14" rx="1" />
+                                <rect width="7" height="7" x="3" y="14" rx="1" />
+                            </svg>
+                        </button>
+                        <button
+                            type="button"
+                            class="app-view-button"
+                            data-app-view="list"
+                            aria-label="List view"
+                            title="List view"
+                            aria-pressed="false"
+                            disabled
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                            >
+                                <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="start-apps-content">
+                    <div id="start-apps" class="start-apps"></div>
+                    <p id="app-search-empty" class="app-search-empty" role="status" hidden
+                        >No apps found.</p
+                    >
+                </div>
+                <label class="app-search">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.3-4.3" />
+                    </svg>
+                    <input
+                        id="app-search"
+                        type="search"
+                        placeholder="Search apps…"
+                        aria-label="Search apps"
+                        autocomplete="off"
+                        spellcheck="false"
+                    />
+                </label>
+            </section>
+            <aside class="start-sidebar" aria-label="Profile and appearance">
+                <!-- Lucide icons: https://lucide.dev (ISC license). -->
+                <div class="profile">
+                    <button
+                        id="change-avatar"
+                        class="avatar"
+                        type="button"
+                        aria-label="Change profile picture"
+                        title="Change profile picture"
+                        disabled
+                        ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <circle cx="12" cy="8" r="5" />
+                            <path d="M20 21a8 8 0 0 0-16 0" /></svg
+                    ></button>
+                    <div class="profile-details">
+                        <span class="profile-caption">Your profile</span>
+                        <button
+                            id="edit-username"
+                            class="username"
+                            type="button"
+                            title="Edit username"
+                            disabled
+                            ><span id="username">user</span
+                            ><svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.5z"
+                                />
+                                <path d="m15 5 4 4" /></svg
+                        ></button>
+                    </div>
+                </div>
+                <input id="avatar-picker" type="file" accept="image/*" hidden />
+
+                <button
+                    id="toggle-desktop-clock"
+                    class="menu-action"
+                    type="button"
+                    title="Hide desktop clock"
+                    aria-label="Hide desktop clock"
+                    aria-pressed="true"
+                    disabled
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 6v6l4 2" />
+                    </svg>
+                    <span>Desktop clock</span>
+                </button>
+                <button
+                    id="change-wallpaper"
+                    title="Choose wallpaper (image, GIF, or MP4)"
+                    aria-label="Choose wallpaper (image, GIF, or MP4)"
+                    class="menu-action"
+                    type="button"
+                    disabled
+                    ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                        <circle cx="9" cy="9" r="2" />
+                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg
+                    ><span>Choose wallpaper</span></button
+                >
+                <button
+                    id="default-wallpaper"
+                    title="Default wallpaper"
+                    aria-label="Default wallpaper"
+                    class="menu-action"
+                    type="button"
+                    disabled
+                    ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                        <path d="M3 3v5h5" /></svg
+                    ><span>Default wallpaper</span></button
+                >
+                <input
+                    id="wallpaper-picker"
+                    type="file"
+                    accept="image/*,.gif,video/mp4,.mp4"
+                    hidden
+                />
+            </aside>
+            <p id="settings-status" class="settings-status" role="status"></p>
+        </div>
+        <section
+            id="desktop-clock"
+            class="desktop-clock"
+            aria-label="Desktop clock. Drag to move, or use arrow keys when focused."
+            tabindex="0"
+            hidden
+        >
+            <button
+                id="remove-desktop-clock"
+                class="desktop-clock-control desktop-clock-remove"
+                type="button"
+                title="Remove desktop clock"
+                aria-label="Remove desktop clock"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                >
+                    <path d="m18 6-12 12M6 6l12 12" />
+                </svg>
+            </button>
+            <div id="desktop-clock-day" class="desktop-clock-day"></div>
+            <div id="desktop-clock-date" class="desktop-clock-date"></div>
+            <time id="desktop-clock-time" class="desktop-clock-time"></time>
+            <button
+                id="resize-desktop-clock"
+                class="desktop-clock-control desktop-clock-resize"
+                type="button"
+                title="Drag to resize, or use arrow keys"
+                aria-label="Resize desktop clock using drag or arrow keys"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                >
+                    <path d="m21 15-6 6m6-13L8 21" />
+                </svg>
+            </button>
+        </section>
+        <div class="taskbar" aria-label="Desktop taskbar">
+            <div class="taskbar-left">
+                <button
+                    class="home"
+                    type="button"
+                    aria-label="Start menu"
+                    aria-controls="start-menu"
+                    aria-expanded="false"
+                >
+                    <img src="wallpaper/blackcat.ico" width="30" height="30" alt="" />
+                </button>
+                <span class="taskbar-divider" aria-hidden="true"></span>
+                <button
+                    id="theme-toggle"
+                    class="theme-toggle"
+                    type="button"
+                    aria-label="Switch to light mode"
+                    title="Switch to light mode"
+                    disabled
+                >
+                    <svg
+                        class="theme-sun"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <circle cx="12" cy="12" r="4" />
+                        <path
+                            d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42M12 2v2"
+                        />
+                    </svg>
+                    <svg
+                        class="theme-moon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="22"
+                        height="22"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path
+                            d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6.25 6.25 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
+                        />
+                    </svg>
+                </button>
+                <button
+                    id="choose-music"
+                    class="theme-toggle"
+                    type="button"
+                    title="Choose background music"
+                    aria-label="Choose background music"
+                    disabled
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="21"
+                        height="21"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M9 18V5l12-2v13" />
+                        <circle cx="6" cy="18" r="3" />
+                        <circle cx="18" cy="16" r="3" />
+                    </svg>
+                </button>
+            </div>
+            <div class="taskbar-right">
+                <span class="taskbar-divider" aria-hidden="true"></span>
+                <button
+                    id="mute-music"
+                    class="theme-toggle"
+                    type="button"
+                    title="Choose music first"
+                    aria-label="Choose music first"
+                    aria-pressed="false"
+                    disabled
+                >
+                    <svg
+                        class="music-volume"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="21"
+                        height="21"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path
+                            d="m11 5-6 4H2v6h3l6 4zM15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"
+                        />
+                    </svg>
+                    <svg
+                        class="music-silent"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="21"
+                        height="21"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="m11 5-6 4H2v6h3l6 4zM22 9l-6 6M16 9l6 6" />
+                    </svg>
+                </button>
+                <button
+                    id="calendar-toggle"
+                    class="theme-toggle"
+                    type="button"
+                    title="Calendar"
+                    aria-label="Calendar"
+                    aria-controls="calendar-panel"
+                    aria-expanded="false"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="21"
+                        height="21"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M8 2v4M16 2v4M3 10h18" />
+                        <rect x="3" y="4" width="18" height="18" rx="2" />
+                    </svg>
+                </button>
+                <div class="clock">
+                    <div id="time"></div>
+                    <div id="date"></div>
+                </div>
+            </div>
+            <input
+                id="music-picker"
+                type="file"
+                accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac"
+                hidden
+            />
+            <span id="music-status" class="music-status" role="status"></span>
+        </div>
+        <section id="calendar-panel" class="calendar-panel" aria-label="Calendar" hidden>
+            <div class="calendar-header">
+                <h2 id="calendar-month" aria-live="polite"></h2>
+                <button
+                    id="calendar-prev"
+                    type="button"
+                    aria-label="Previous month"
+                    title="Previous month"
+                    >‹</button
+                >
+                <button id="calendar-next" type="button" aria-label="Next month" title="Next month"
+                    >›</button
+                >
+            </div>
+            <div
+                id="calendar-weekdays"
+                class="calendar-grid calendar-weekdays"
+                aria-hidden="true"
+            ></div>
+            <div id="calendar-days" class="calendar-grid" aria-labelledby="calendar-month"></div>
+            <button id="calendar-today" class="calendar-today" type="button">Today</button>
+        </section>
+        <dialog id="app-editor" class="app-editor">
+            <form id="app-form">
+                <h2 id="app-editor-title">Add app</h2>
+                <label for="app-name-input"
+                    >App name<input id="app-name-input" maxlength="60" required autocomplete="off"
+                /></label>
+                <label for="app-url-input"
+                    >Website address<input
+                        id="app-url-input"
+                        type="text"
+                        placeholder="https://example.com"
+                        required
+                        autocomplete="off"
+                        spellcheck="false"
+                /></label>
+                <p id="app-form-error" role="alert"></p>
+                <div class="app-editor-actions"
+                    ><button id="cancel-app" type="button">Cancel</button
+                    ><button id="save-app" type="submit">Save</button></div
+                >
+            </form>
+        </dialog>
+        <div id="app-options" class="app-options" role="menu" aria-label="App options" hidden>
+            <button id="edit-app" type="button" role="menuitem"
+                ><svg
+                    class="app-option-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.5z"
+                    />
+                    <path d="m15 5 4 4" /></svg
+                ><span class="app-option-divider" aria-hidden="true"></span
+                ><span class="app-option-label">Edit app</span></button
+            >
+            <button id="enable-icon-color" type="button" role="menuitemcheckbox" aria-checked="true"
+                ><svg
+                    class="app-option-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="M12 22a7 7 0 0 0 7-7c0-4-7-13-7-13S5 11 5 15a7 7 0 0 0 7 7Z" /></svg
+                ><span class="app-option-divider" aria-hidden="true"></span
+                ><span class="app-option-label">Enable icon color</span></button
+            >
+            <button
+                id="reverse-tile-color"
+                type="button"
+                role="menuitemcheckbox"
+                aria-checked="false"
+                ><svg
+                    class="app-option-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v20M12 2a10 10 0 0 1 0 20Z" fill="currentColor" /></svg
+                ><span class="app-option-divider" aria-hidden="true"></span
+                ><span class="app-option-label">Reverse black/white background</span></button
+            >
+            <button id="remove-app" type="button" role="menuitem"
+                ><svg
+                    class="app-option-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M3 6h18M19 6v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M10 11v6M14 11v6"
+                    /></svg
+                ><span class="app-option-divider" aria-hidden="true"></span
+                ><span class="app-option-label">Remove app</span></button
+            >
+        </div>
+        <dialog id="remove-app-dialog" class="app-editor" aria-labelledby="remove-app-title">
+            <form id="remove-app-form">
+                <h2 id="remove-app-title">Remove app</h2>
+                <p id="remove-app-description"></p>
+                <label class="removal-choice"
+                    ><input type="radio" name="remove-mode" value="app" checked />App only — keep
+                    the Brave bookmark</label
+                >
+                <label class="removal-choice"
+                    ><input type="radio" name="remove-mode" value="bookmark" />Bookmark only — keep
+                    the app</label
+                >
+                <label class="removal-choice"
+                    ><input type="radio" name="remove-mode" value="both" />Both app and
+                    bookmark</label
+                >
+                <p id="remove-app-note" class="removal-note"></p>
+                <p id="remove-app-error" role="alert"></p>
+                <div class="app-editor-actions"
+                    ><button id="cancel-remove-app" type="button">Cancel</button
+                    ><button id="confirm-remove-app" type="submit">Remove app</button></div
+                >
+            </form>
+        </dialog>
+        <div
+            id="desktop-clock-options"
+            class="app-options"
+            role="menu"
+            aria-label="Desktop clock options"
+            hidden
+        >
+            <button id="desktop-clock-change-color" type="button" role="menuitem"
+                ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="app-option-icon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="M12 22a7 7 0 0 0 7-7c0-4-7-13-7-13S5 11 5 15a7 7 0 0 0 7 7Z" /></svg
+                ><span class="app-option-divider" aria-hidden="true"></span
+                ><span class="app-option-label">Text color</span></button
+            >
+            <button id="desktop-clock-reset" type="button" role="menuitem"
+                ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="app-option-icon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8M3 3v5h5" /></svg
+                ><span class="app-option-divider" aria-hidden="true"></span
+                ><span class="app-option-label">Restore defaults</span></button
+            >
+            <button id="desktop-clock-menu-remove" type="button" role="menuitem"
+                ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="app-option-icon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M3 6h18M19 6v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M10 11v6M14 11v6"
+                    /></svg
+                ><span class="app-option-divider" aria-hidden="true"></span
+                ><span class="app-option-label">Remove clock</span></button
+            >
+        </div>
+        <input id="desktop-clock-color" type="color" aria-label="Desktop clock text color" hidden />
+    </body>
+</html>

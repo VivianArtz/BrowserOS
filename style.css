@@ -1,0 +1,1262 @@
+@font-face {
+    font-family: "Anurati";
+    src: url("fonts/Anurati.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* BrowserOS: shared theme tokens, components, states, and responsive overrides. */
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-image: none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: var(--wallpaper-bg);
+}
+
+/* The built-in wallpaper is CSS and the existing cat icon, not a generated image. */
+.default-wallpaper {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    pointer-events: none;
+    user-select: none;
+    color: var(--wallpaper-text);
+}
+.default-wallpaper-icon {
+    display: block;
+    width: clamp(80px, 9vw, 112px);
+    height: auto;
+    object-fit: contain;
+}
+.default-wallpaper-name {
+    font-family: Arial, sans-serif;
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.12em;
+}
+body.has-custom-wallpaper .default-wallpaper {
+    display: none;
+}
+
+.taskbar {
+    box-sizing: border-box;
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    width: min(80%, calc(100% - 32px));
+    z-index: 100;
+}
+
+.home {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    padding: 4px;
+    background-color: transparent;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.home img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.home:hover {
+    transform: translateY(-2px);
+}
+
+.home:focus-visible {
+    outline: 2px solid #c4b5fd;
+    outline-offset: 2px;
+}
+
+.home:active {
+    transform: translateY(0);
+}
+
+.homemenu {
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 82px;
+    left: max(16px, 10%);
+    height: min(400px, calc(100dvh - 98px));
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0s linear 0.2s;
+    border-radius: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home {
+        transition: none;
+    }
+}
+
+.clock {
+    flex-shrink: 0;
+    text-align: right;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.4;
+}
+
+#date {
+    font-size: 11px;
+}
+
+.desktop-apps {
+    box-sizing: border-box;
+    position: fixed;
+    inset: 0 0 88px;
+    display: grid;
+    grid-template-rows: repeat(auto-fill, 80px);
+    grid-auto-flow: column;
+    justify-content: start;
+    align-content: start;
+    gap: 8px;
+    padding: 16px;
+    overflow: auto;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    min-width: 0;
+    padding: 6px 4px;
+    border-radius: 14px;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    text-decoration: none;
+}
+
+.app:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.app:focus-visible {
+    outline: 2px solid #c4b5fd;
+    outline-offset: -2px;
+}
+
+.app-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.app-icon img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+}
+
+.app-name {
+    max-width: 100%;
+    font-size: 13px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    text-shadow: 0 1px 4px #000000;
+}
+
+.homemenu.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition-delay: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .homemenu {
+        transition: none;
+        transform: none;
+    }
+}
+
+.homemenu {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 88px;
+    width: min(460px, calc(100% - 32px));
+    padding: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+}
+
+.start-apps-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    padding: 20px 10px 12px;
+}
+.start-heading {
+    margin: 0 10px 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+.start-apps {
+    display: grid;
+    grid-auto-rows: 90px;
+    gap: 8px;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px;
+    scrollbar-width: thin;
+}
+.start-apps .app-name {
+    display: -webkit-box;
+}
+.start-sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 18px 8px;
+    border-left: 1px solid #ffffff15;
+}
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: auto;
+}
+.avatar {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid #ffffff20;
+    border-radius: 50%;
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+}
+.avatar svg {
+    width: 25px;
+    height: 25px;
+}
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.profile-details {
+    min-width: 0;
+    width: 100%;
+}
+.profile-caption {
+    display: none;
+}
+.username {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    min-width: 0;
+    padding: 4px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    font:
+        12px Arial,
+        sans-serif;
+    cursor: pointer;
+}
+#username {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.username svg {
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+}
+.menu-action {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    cursor: pointer;
+}
+.menu-action svg {
+    width: 22px;
+    height: 22px;
+}
+.menu-action span,
+.settings-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+.homemenu button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.start-apps-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0 6px 12px;
+    flex-shrink: 0;
+}
+.start-apps-header .start-heading {
+    margin: 0;
+}
+.app-view-options {
+    display: flex;
+    gap: 4px;
+}
+.app-view-button {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+}
+.start-apps.is-list {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 52px;
+    gap: 4px;
+}
+.start-apps.is-list .app {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 6px 10px;
+    text-align: left;
+}
+.start-apps.is-list .app-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    font-size: 16px;
+}
+.start-apps.is-list .app-icon img {
+    width: 22px;
+    height: 22px;
+}
+.start-apps.is-list .app-name {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 13px;
+}
+
+.start-apps-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+.start-apps-content .start-apps {
+    flex: 1;
+}
+.start-apps .app[hidden] {
+    display: none;
+}
+.app-search {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    margin: 12px 4px 0;
+    padding: 10px;
+    border: 1px solid #ffffff24;
+    border-radius: 10px;
+}
+.app-search svg {
+    flex-shrink: 0;
+}
+.app-search input {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font:
+        13px Arial,
+        sans-serif;
+}
+.app-search-empty {
+    margin: 16px 10px;
+    font-size: 13px;
+}
+
+.desktop-apps .app {
+    user-select: none;
+    cursor: grab;
+}
+.desktop-apps .app img {
+    pointer-events: none;
+    -webkit-user-drag: none;
+}
+.desktop-apps .app.is-dragging {
+    opacity: 0.4;
+    cursor: grabbing;
+}
+.desktop-drop-preview {
+    box-sizing: border-box;
+    border: 1px dashed #ffffff;
+    border-radius: 14px;
+    background: #ffffff14;
+    pointer-events: none;
+    z-index: 1;
+}
+.desktop-drop-preview[hidden] {
+    display: none;
+}
+
+.add-app-button {
+    padding: 6px 8px;
+    border: 1px solid #ffffff25;
+    border-radius: 8px;
+    font:
+        12px Arial,
+        sans-serif;
+    cursor: pointer;
+}
+.app-editor {
+    width: min(360px, calc(100vw - 64px));
+    padding: 24px;
+    border: 1px solid #ffffff25;
+    border-radius: 18px;
+    font:
+        14px Arial,
+        sans-serif;
+    box-shadow: 0 20px 60px #0008;
+}
+.app-editor::backdrop {
+    background: #0008;
+}
+.app-editor h2 {
+    margin: 0 0 22px;
+    font-size: 20px;
+}
+.app-editor label {
+    display: block;
+    margin: 16px 0;
+}
+.app-editor input {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ffffff30;
+    border-radius: 8px;
+    font: inherit;
+}
+.app-editor-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+}
+.app-editor button {
+    border: 1px solid #ffffff25;
+    border-radius: 8px;
+    cursor: pointer;
+}
+#app-form-error {
+    font-size: 12px;
+    line-height: 1.5;
+}
+.app-options {
+    position: fixed;
+    z-index: 300;
+    border: 1px solid #ffffff25;
+}
+.app-options[hidden] {
+    display: none;
+}
+.app-editor :focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+.app-editor button:disabled,
+.add-app-button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.app-editor .removal-choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+}
+.removal-note {
+    font-size: 12px;
+    line-height: 1.5;
+}
+#remove-app-description {
+    overflow-wrap: anywhere;
+}
+
+body.is-loading > :not(.tab-loading) {
+    visibility: hidden;
+}
+.tab-loading {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+}
+
+.wallpaper-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 0;
+}
+.desktop-apps {
+    --desktop-cell-width: 80px;
+    --desktop-cell-height: 80px;
+    grid-auto-columns: var(--desktop-cell-width);
+    grid-auto-rows: var(--desktop-cell-height);
+    z-index: 1;
+}
+
+:root {
+    color-scheme: dark;
+    --wallpaper-bg: #2e3136;
+    --wallpaper-text: #dedede;
+    --ui-bg: #24222b;
+    --ui-text: #ffffff;
+    --ui-muted: #b5b5bf;
+    --ui-border: #ffffff25;
+    --ui-hover: #ffffff14;
+    --ui-active: #ffffff24;
+    --ui-field: #ffffff0a;
+    --ui-avatar: #3b3b43;
+    --ui-icon: #302d3d;
+    --ui-error: #ffb4b4;
+}
+:root[data-theme="light"] {
+    color-scheme: light;
+    --wallpaper-bg: #dedede;
+    --wallpaper-text: #2e3136;
+    --ui-bg: #f7f7fb;
+    --ui-text: #20212a;
+    --ui-muted: #626371;
+    --ui-border: #20212a26;
+    --ui-hover: #20212a0d;
+    --ui-active: #20212a1c;
+    --ui-field: #20212a06;
+    --ui-avatar: #e2e3eb;
+    --ui-icon: #e8e9f1;
+    --ui-error: #b42318;
+}
+.theme-toggle {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--ui-text);
+    cursor: pointer;
+}
+.theme-toggle:hover {
+    background: var(--ui-hover);
+}
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--ui-text);
+    outline-offset: 2px;
+}
+.theme-toggle:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+.theme-moon,
+:root[data-theme="light"] .theme-sun {
+    display: none;
+}
+:root[data-theme="light"] .theme-moon {
+    display: block;
+}
+.taskbar {
+    background: var(--ui-bar);
+}
+.clock,
+.homemenu {
+    color: var(--ui-text);
+}
+.app-editor {
+    color: var(--ui-text);
+}
+#date {
+    color: var(--ui-muted);
+}
+.homemenu,
+.app-editor {
+    background: var(--ui-bg);
+    border-color: var(--ui-border);
+}
+.app-options {
+    box-shadow: 0 8px 28px #0006;
+    color: var(--ui-text);
+    background: var(--ui-bg);
+    border-color: var(--ui-border);
+}
+.start-sidebar {
+    scrollbar-width: thin;
+    background: var(--ui-field);
+    border-color: var(--ui-border);
+}
+.username {
+    max-width: 100%;
+    color: var(--ui-text);
+}
+.username svg,
+.menu-action {
+    color: var(--ui-text);
+}
+.menu-action svg,
+.app-view-button {
+    color: var(--ui-text);
+}
+.add-app-button,
+.app-search {
+    color: var(--ui-text);
+}
+.app-search input {
+    min-width: 0;
+    outline: none;
+    color: var(--ui-text);
+}
+.app-editor input,
+.app-editor button {
+    color: var(--ui-text);
+}
+.app-options button {
+    width: 100%;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    font:
+        13px Arial,
+        sans-serif;
+    text-align: left;
+    cursor: pointer;
+    color: var(--ui-text);
+}
+.avatar {
+    color: var(--ui-text);
+    background: var(--ui-avatar);
+    border-color: var(--ui-border);
+}
+.add-app-button {
+    margin-left: auto;
+    white-space: nowrap;
+    border-color: var(--ui-border);
+    background: var(--ui-field);
+}
+.app-search {
+    align-items: center;
+    min-width: 0;
+    border-color: var(--ui-border);
+    background: var(--ui-field);
+}
+.app-editor input {
+    box-sizing: border-box;
+    margin-top: 8px;
+    border-color: var(--ui-border);
+    background: var(--ui-field);
+}
+.app-editor button {
+    padding: 9px 16px;
+    border-color: var(--ui-border);
+    background: var(--ui-field);
+}
+.app-view-button[aria-pressed="true"] {
+    background: var(--ui-active);
+}
+.home:hover,
+.menu-action:hover {
+    background: var(--ui-hover);
+}
+.username:hover,
+.avatar:hover {
+    background: var(--ui-hover);
+}
+.app-view-button:hover,
+.add-app-button:hover {
+    background: var(--ui-hover);
+}
+.app-options button:hover,
+.app-options button:focus-visible {
+    background: var(--ui-hover);
+}
+.start-apps .app:hover {
+    background: var(--ui-hover);
+}
+.start-apps .app {
+    box-sizing: border-box;
+    color: var(--ui-text);
+}
+.start-apps .app-name {
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 12px;
+    text-shadow: none;
+}
+.app-icon {
+    background: var(--ui-icon);
+}
+.start-apps {
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    align-content: start;
+    scrollbar-color: var(--ui-border) transparent;
+}
+.app-search input::placeholder,
+.app-search-empty {
+    color: var(--ui-muted);
+}
+.removal-note {
+    color: var(--ui-muted);
+}
+.app-search:focus-within {
+    border-color: var(--ui-text);
+}
+.homemenu button:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+    outline-color: var(--ui-text);
+}
+.app-editor :focus-visible {
+    outline-color: var(--ui-text);
+}
+#save-app,
+#confirm-remove-app {
+    background: var(--ui-text);
+    color: var(--ui-bg);
+}
+#app-form-error {
+    color: var(--ui-error);
+}
+#remove-app-error {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ui-error);
+}
+.app-editor .removal-choice input {
+    width: auto;
+    margin: 4px 0 0;
+    flex-shrink: 0;
+    accent-color: var(--ui-text);
+}
+.tab-loading {
+    font:
+        14px Arial,
+        sans-serif;
+    background: var(--ui-bg);
+    color: var(--ui-muted);
+}
+
+.music-silent,
+#mute-music.is-muted .music-volume {
+    display: none;
+}
+#mute-music.is-muted .music-silent {
+    display: block;
+}
+.music-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+.clock {
+    margin-left: 0;
+}
+
+#mute-music {
+    margin-left: auto;
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease;
+}
+#mute-music:hover {
+    background: var(--ui-hover);
+    transform: translateY(-2px);
+}
+#mute-music:active {
+    transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+    #mute-music {
+        transition: none;
+    }
+}
+
+.taskbar button {
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease;
+}
+.taskbar button:hover {
+    background: var(--ui-hover);
+    transform: translateY(-2px);
+}
+.taskbar button:active {
+    transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+    .taskbar button {
+        transition: none;
+    }
+}
+
+.calendar-panel {
+    box-sizing: border-box;
+    position: fixed;
+    right: max(16px, 10%);
+    bottom: 82px;
+    z-index: 99;
+    width: min(320px, calc(100vw - 32px));
+    max-height: calc(100dvh - 98px);
+    overflow-y: auto;
+    padding: 20px;
+    border: 1px solid var(--ui-border);
+    border-radius: 20px;
+    background: var(--ui-bg);
+    color: var(--ui-text);
+    font:
+        13px Arial,
+        sans-serif;
+    box-shadow: 0 16px 40px #0005;
+}
+.calendar-panel[hidden] {
+    display: none;
+}
+.calendar-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+.calendar-header h2 {
+    flex: 1;
+    margin: 0;
+    font-size: 15px;
+}
+.calendar-panel button {
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--ui-text);
+    cursor: pointer;
+}
+.calendar-header button {
+    width: 28px;
+    height: 28px;
+    font-size: 22px;
+}
+.calendar-panel button:hover {
+    background: var(--ui-hover);
+}
+.calendar-panel button:focus-visible {
+    outline: 2px solid var(--ui-text);
+    outline-offset: 2px;
+}
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 3px;
+    text-align: center;
+}
+.calendar-weekdays {
+    color: var(--ui-muted);
+    margin-bottom: 8px;
+}
+.calendar-day {
+    display: grid;
+    place-items: center;
+    height: 32px;
+    border-radius: 9px;
+}
+.calendar-day.is-today {
+    background: var(--ui-text);
+    color: var(--ui-bg);
+    font-weight: bold;
+}
+.calendar-today {
+    margin-top: 14px;
+    padding: 8px 12px;
+    font: inherit;
+}
+.home img {
+    transform: translateY(-2px);
+}
+:root {
+    --ui-bar: rgba(34, 34, 38, 0.8);
+}
+:root[data-theme="light"] {
+    --ui-bar: rgba(247, 247, 251, 0.84);
+}
+.taskbar .theme-toggle {
+    width: 36px;
+    height: 36px;
+}
+.desktop-apps .app {
+    box-sizing: border-box;
+    gap: 5px;
+    padding: 5px 4px;
+}
+.desktop-apps .app-icon {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #ffffff14;
+    border-radius: 13px;
+    color: var(--ui-text);
+    box-shadow: 0 3px 10px #00000028;
+}
+.desktop-apps .app-icon img {
+    width: 28px;
+    height: 28px;
+}
+.app-icon.light-icon-backing {
+    background: #e8e9ef;
+    color: #20212a;
+    border-color: #ffffff50;
+}
+.desktop-apps .app-name {
+    background: transparent;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: #ffffff;
+    font-size: 12px;
+    line-height: 1.25;
+    text-shadow:
+        0 1px 3px #000000e6,
+        0 2px 6px #00000099,
+        0 2px 8px #ffffff65;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+.taskbar {
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 17px;
+    box-shadow:
+        0 8px 28px #00000030,
+        inset 0 1px 0 #ffffff0a;
+    height: 49px;
+    padding: 5px 14px;
+    gap: 16px;
+}
+.taskbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+.taskbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    margin-left: auto;
+}
+.taskbar-right #mute-music,
+.taskbar-right .clock {
+    margin-left: 0;
+}
+.taskbar .home {
+    box-sizing: border-box;
+    width: 38px;
+    height: 38px;
+    padding: 4px;
+}
+.taskbar .home img {
+    width: 30px;
+    height: 30px;
+}
+@media (max-width: 520px) {
+    .taskbar {
+        width: calc(100% - 24px);
+        padding: 5px 8px;
+        gap: 6px;
+    }
+    .taskbar-left,
+    .taskbar-right {
+        gap: 4px;
+    }
+    .taskbar .theme-toggle {
+        width: 32px;
+    }
+    .clock {
+        font-size: 12px;
+    }
+    #date {
+        font-size: 10px;
+    }
+}
+
+.taskbar-divider {
+    display: block;
+    flex: 0 0 1px;
+    width: 1px;
+    height: 24px;
+    align-self: center;
+    background: var(--ui-border);
+}
+.taskbar {
+    border: 1px solid rgba(255, 255, 255, 0.75);
+}
+.desktop-apps .app-name {
+    flex: 0 0 auto;
+    max-height: 30px;
+    max-width: 100%;
+}
+.desktop-apps .app-icon,
+.start-apps .app-icon {
+    background: var(--app-icon-color, var(--ui-icon));
+}
+.desktop-apps .app-icon.light-icon-backing,
+.start-apps .app-icon.light-icon-backing {
+    background: var(--app-icon-color, var(--ui-icon));
+}
+.desktop-apps .app-icon img,
+.start-apps .app-icon img {
+    filter: none;
+}
+.desktop-apps .app-icon.light-icon-backing img,
+.start-apps .app-icon.light-icon-backing img {
+    filter: none;
+}
+.app-options button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+.app-options button[aria-checked="true"]::after {
+    content: "✓";
+    margin-left: 10px;
+}
+.app-option-icon {
+    flex: 0 0 18px;
+}
+.app-option-label {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.app-options button[role="menuitemcheckbox"][aria-checked="true"]::after {
+    content: "✓";
+}
+.app-options {
+    box-sizing: border-box;
+    max-width: calc(100vw - 16px);
+    min-width: 220px;
+    width: 220px;
+    padding: 4px;
+    border-radius: 10px;
+}
+.app-options button {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    gap: 8px;
+    padding: 8px;
+    font-size: 12px;
+    line-height: 1.3;
+}
+.app-option-icon {
+    color: var(--ui-text);
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+}
+.app-option-divider {
+    flex: 0 0 1px;
+    width: 1px;
+    height: 18px;
+    background: var(--ui-border);
+}
+.app-options button[role="menuitemcheckbox"]::after {
+    content: "";
+    flex: 0 0 14px;
+    text-align: center;
+    flex-basis: 12px;
+    margin-left: 0;
+}
+
+/* Movable desktop clock: typography stays proportional when the widget is resized. */
+.desktop-clock {
+    position: fixed;
+    z-index: 20;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    container-type: inline-size;
+    gap: 8px;
+    padding: 18px 6px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    color: var(--wallpaper-text);
+    font-family: "Bahnschrift", "Segoe UI", Arial, sans-serif;
+    text-align: center;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+}
+.desktop-clock[hidden] {
+    display: none;
+}
+body.has-custom-wallpaper .desktop-clock {
+    color: #ffffff;
+    text-shadow: 0 2px 10px #00000080;
+}
+.desktop-clock-day {
+    max-width: 100%;
+    font-family: "Anurati", "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: max(16px, calc(100cqw / var(--weekday-length, 9)));
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0.13em;
+    white-space: nowrap;
+}
+.desktop-clock-date,
+.desktop-clock-time {
+    font-size: clamp(10px, 4cqw, 24px);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+}
+.desktop-clock-control {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+    background: var(--ui-bg);
+    color: var(--ui-text);
+    opacity: 0;
+    cursor: pointer;
+}
+.desktop-clock-remove {
+    top: 2px;
+    right: 2px;
+}
+.desktop-clock-resize {
+    bottom: 2px;
+    right: 2px;
+    cursor: nwse-resize;
+    touch-action: none;
+}
+.desktop-clock:hover,
+.desktop-clock:focus-within,
+.desktop-clock.is-moving {
+    border-color: var(--ui-border);
+}
+.desktop-clock:hover .desktop-clock-control,
+.desktop-clock:focus-within .desktop-clock-control,
+.desktop-clock.is-moving .desktop-clock-control {
+    opacity: 1;
+}
+.desktop-clock-control:hover {
+    background: var(--ui-active);
+}
+.desktop-clock:focus-visible,
+.desktop-clock-control:focus-visible {
+    outline: 2px solid var(--ui-text);
+    outline-offset: 3px;
+}
+.desktop-clock.is-moving {
+    cursor: grabbing;
+}
+@media (hover: none) {
+    .desktop-clock-control {
+        opacity: 1;
+    }
+}
