@@ -810,6 +810,10 @@ function visibleAppRecords() {
     });
 }
 
+function findAppRecord(id) {
+    return [...appCatalog, ...bookmarkApps].find((app) => app.id === id);
+}
+
 function bookmarkRecords(tree) {
     const records = [];
     function visit(nodes) {
@@ -897,8 +901,14 @@ function renderAppCatalog() {
         const app = createAppShortcut(record);
         app.draggable = true;
         desktopApps.insertBefore(app, dropPreview);
-        startApps.append(createAppShortcut(record));
         return app;
+    });
+    const menuUrls = new Set();
+    [...appCatalog, ...bookmarkApps].forEach((record) => {
+        const url = normalizeAppUrl(record.url);
+        if (menuUrls.has(url)) return;
+        menuUrls.add(url);
+        startApps.append(createAppShortcut(record));
     });
     loadAppIcons();
     if (desktopReady) renderDesktopPositions();
@@ -1034,18 +1044,50 @@ function showAppOptions(event) {
     event.preventDefault();
     selectedAppId = app.dataset.appId;
     appOptionsOpener = app;
+    const fromMenu = startApps.contains(app);
+    document.getElementById("edit-app").hidden = fromMenu && !appCatalog.some((record) => record.id === selectedAppId);
+    const addButton = document.getElementById("add-to-desktop");
+    addButton.hidden = !fromMenu;
+    addButton.disabled = visibleAppRecords().some((record) =>
+        normalizeAppUrl(record.url) === normalizeAppUrl(app.href)
+    );
+    addButton.querySelector(".app-option-label").textContent = addButton.disabled
+        ? "Already on desktop" : "Add to desktop";
     updateTileOptions(app);
     appOptions.hidden = false;
     appOptions.style.left = `${Math.max(8, Math.min(event.clientX, innerWidth - appOptions.offsetWidth - 8))}px`;
     appOptions.style.top = `${Math.max(8, Math.min(event.clientY, innerHeight - appOptions.offsetHeight - 8))}px`;
-    document.getElementById("edit-app").focus();
+    appOptions.querySelector("button:not([hidden]):not(:disabled)")?.focus();
 }
 desktopApps.addEventListener("contextmenu", showAppOptions);
 startApps.addEventListener("contextmenu", showAppOptions);
 document.getElementById("edit-app").addEventListener("click", () => {
-    const record = visibleAppRecords().find((app) => app.id === selectedAppId);
+    const record = findAppRecord(selectedAppId);
     if (record) openAppEditor(record);
 });
+document.getElementById("add-to-desktop").addEventListener("click", async () => {
+    const record = findAppRecord(selectedAppId);
+    if (!record || catalogBusy) return;
+    closeAppOptions();
+    catalogBusy = true;
+    try {
+        const hidden = new Set(hiddenBookmarkIds);
+        const matching = [...appCatalog, ...bookmarkApps].filter((app) =>
+            normalizeAppUrl(app.url) === normalizeAppUrl(record.url)
+        );
+        matching.forEach((app) => hidden.delete(app.id));
+        await storedSetting("put", "appLibrary", {
+            apps: appCatalog, hiddenBookmarkIds: [...hidden]
+        });
+        hiddenBookmarkIds = hidden;
+        renderAppCatalog();
+    } catch {
+        alert("Could not add this bookmark to the desktop. Please try again.");
+    } finally {
+        catalogBusy = false;
+    }
+});
+
 // Per-app tile preferences
 function updateTileOptions(app) {
     const mode = iconTilePreferences[app.dataset.appId] || "auto";
@@ -1089,7 +1131,7 @@ document.getElementById("reverse-tile-color").addEventListener("click", () => {
 
 document.getElementById("enable-icon-color").addEventListener("click", async () => {
     if (tilePreferenceBusy) return;
-    const record = visibleAppRecords().find((app) => app.id === selectedAppId);
+    const record = findAppRecord(selectedAppId);
     if (!record) return;
     // Checked means icon-derived color; unchecked follows the current theme.
     if (iconTilePreferences[record.id] !== "default") {
@@ -1162,14 +1204,14 @@ function updateRemovalChoice() {
         mode === "app" ? "Remove app" : mode === "bookmark" ? "Delete bookmark" : "Delete both";
     document.getElementById("remove-app-note").textContent =
         mode === "app"
-            ? "This hides the app from the desktop and start menu. Your Brave bookmarks stay saved."
-            : `This will delete ${count} matching Brave bookmark${count === 1 ? "" : "s"}. ${mode === "bookmark" ? "The app will stay saved in BrowserOS." : "The app will also be removed from BrowserOS."}`;
+            ? "This removes the desktop shortcut. Your browser bookmarks stay saved in the bookmarks menu."
+            : `This will delete ${count} matching browser bookmark${count === 1 ? "" : "s"}. ${mode === "bookmark" ? "The app will stay saved in BrowserOS." : "The app will also be removed from BrowserOS."}`;
 }
 
 removalForm.addEventListener("change", updateRemovalChoice);
 document.getElementById("remove-app").addEventListener("click", async () => {
     if (catalogBusy) return;
-    removalRecord = visibleAppRecords().find((app) => app.id === selectedAppId);
+    removalRecord = findAppRecord(selectedAppId);
     closeAppOptions();
     if (!removalRecord) return;
     await refreshBookmarks(false);
@@ -1236,7 +1278,7 @@ removalForm.addEventListener("submit", async (event) => {
         await refreshBookmarks(false);
         renderAppCatalog();
         removalError.textContent = localSaved
-            ? `The app change was saved, but bookmark deletion did not finish (${deleted} deleted). Check Brave bookmarks before retrying.`
+            ? `The app change was saved, but bookmark deletion did not finish (${deleted} deleted). Check your browser bookmarks before retrying.`
             : "Nothing was deleted. Could not save the app change; please try again.";
         console.warn("Removal could not finish:", error);
     } finally {

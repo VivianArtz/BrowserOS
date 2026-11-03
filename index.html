@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>BrowserOS</title>
         <link rel="icon" href="wallpaper/blackcat.ico" type="image/x-icon" />
-        <link rel="stylesheet" href="style.css?v=1.13.0" />
-        <script src="index.js?v=1.13.0" defer></script>
+        <link rel="stylesheet" href="style.css?v=1.14.1" />
+        <script src="index.js?v=1.14.1" defer></script>
     </head>
     <body class="is-loading" aria-busy="true">
         <div id="tab-loading" class="tab-loading" role="status">Loading BrowserOS…</div>
@@ -36,7 +36,7 @@
             </a>
         </main>
         <div class="homemenu" id="start-menu" aria-label="Start menu" aria-hidden="true" inert>
-            <section class="start-apps-panel" aria-label="Apps">
+            <section class="start-apps-panel" aria-label="Apps and bookmarks">
                 <div class="start-apps-header">
                     <h2 class="start-heading">Apps</h2>
                     <button id="add-app" class="add-app-button" type="button" disabled
@@ -121,8 +121,8 @@
                     <input
                         id="app-search"
                         type="search"
-                        placeholder="Search apps…"
-                        aria-label="Search apps"
+                        placeholder="Search apps and bookmarks…"
+                        aria-label="Search apps and bookmarks"
                         autocomplete="off"
                         spellcheck="false"
                     />
@@ -527,6 +527,11 @@
             </form>
         </dialog>
         <div id="app-options" class="app-options" role="menu" aria-label="App options" hidden>
+            <button id="add-to-desktop" type="button" role="menuitem" hidden>
+                <svg class="app-option-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="13" rx="2"/><path d="M8 21h8M12 16v5M9 9h6M12 6v6"/></svg>
+                <span class="app-option-divider" aria-hidden="true"></span>
+                <span class="app-option-label">Add to desktop</span>
+            </button>
             <button id="edit-app" type="button" role="menuitem"
                 ><svg
                     class="app-option-icon"
@@ -616,7 +621,7 @@
                 <p id="remove-app-description"></p>
                 <label class="removal-choice"
                     ><input type="radio" name="remove-mode" value="app" checked />App only — keep
-                    the Brave bookmark</label
+                    the browser bookmark</label
                 >
                 <label class="removal-choice"
                     ><input type="radio" name="remove-mode" value="bookmark" />Bookmark only — keep
@@ -701,3 +706,4 @@
         <input id="desktop-clock-color" type="color" aria-label="Desktop clock text color" hidden />
     </body>
 </html>
+

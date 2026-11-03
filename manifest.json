@@ -1,26 +1,26 @@
 {
-    "manifest_version": 3,
-    "name": "BrowserOS New Tab",
-    "version": "1.13.0",
-    "description": "A desktop-style new tab with app shortcuts, search, and personal wallpapers.",
-    "chrome_url_overrides": {
-        "newtab": "index.html"
-    },
-    "icons": {
-        "16": "wallpaper/blackcat.ico",
-        "48": "wallpaper/blackcat.ico",
-        "128": "wallpaper/blackcat.ico"
-    },
-    "permissions": [
-        "unlimitedStorage",
-        "bookmarks",
-        "favicon"
-    ],
-    "content_security_policy": {
-        "extension_pages": "script-src 'self'; object-src 'none'; img-src 'self' https: http: data: blob:; media-src 'self' blob:;"
-    },
-    "optional_host_permissions": [
-        "https://*/*",
-        "http://*/*"
-    ]
+  "manifest_version": 3,
+  "name": "BrowserOS New Tab",
+  "version": "2.0",
+  "description": "A desktop-style new tab with app shortcuts, search, and personal wallpapers.",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "icons": {
+    "16": "wallpaper/blackcat.ico",
+    "48": "wallpaper/blackcat.ico",
+    "128": "wallpaper/blackcat.ico"
+  },
+  "permissions": [
+    "unlimitedStorage",
+    "bookmarks",
+    "favicon"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; img-src 'self' https: http: data: blob:; media-src 'self' blob:;"
+  },
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ]
 }

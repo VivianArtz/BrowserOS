@@ -1260,3 +1260,5 @@ body.has-custom-wallpaper .desktop-clock {
         opacity: 1;
     }
 }
+
+.app-options button[hidden] { display: none; }
